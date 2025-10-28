@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Где записаться? - ALYONA LASHES</title>
+  <link rel="stylesheet" href="css/style5.css" />
+  <style>
+    /* Дополнительные стили для новых функций */
+    .service-selection {
+      background: linear-gradient(135deg, #3a3a3a 0%, #2d2d2d 100%);
+      padding: 2rem;
+      border-radius: 16px;
+      margin: 2rem 0;
+      border: 1px solid #404040;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .service-btn {
+      background: linear-gradient(135deg, #a16076 0%, #8e4c63 100%);
+      color: white;
+      border: none;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      font-family: 'Montserrat', sans-serif;
+      letter-spacing: 0.02em;
+      box-shadow: 0 4px 15px rgba(161, 96, 118, 0.3);
+    }
+
+    .service-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(161, 96, 118, 0.4);
+    }
+
+    .booking-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 2000;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(135deg, #3a3a3a 0%, #2d2d2d 100%);
+      padding: 2.5rem;
+      border-radius: 20px;
+      border: 1px solid #404040;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 1.5rem;
+      color: #d8a7b1;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-weight: bold;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #d8a7b1;
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid #404040;
+      border-radius: 8px;
+      background: #2d2d2d;
+      color: #e0e0e0;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #d8a7b1;
+      box-shadow: 0 0 0 2px rgba(216, 167, 177, 0.2);
+    }
+
+    .form-group textarea {
+      height: 100px;
+      resize: vertical;
+    }
+
+    .time-slots {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .time-slot {
+      padding: 0.5rem;
+      border: 1px solid #404040;
+      border-radius: 6px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: #2d2d2d;
+      font-size: 0.9rem;
+    }
+
+    .time-slot:hover,
+    .time-slot.selected {
+      background: #a16076;
+      border-color: #d8a7b1;
+      color: white;
+    }
+
+    .contact-methods {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .contact-method {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 1.5rem;
+      background: rgba(216, 167, 177, 0.1);
+      border-radius: 12px;
+      border: 1px solid rgba(216, 167, 177, 0.2);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .contact-method:hover {
+      background: rgba(216, 167, 177, 0.2);
+      transform: translateY(-2px);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .whatsapp-link {
+      background: linear-gradient(135deg, #25D366, #128C7E);
+    }
+
+    .telegram-link {
+      background: linear-gradient(135deg, #0088cc, #005580);
+    }
+
+    .vk-profile-link {
+      background: linear-gradient(135deg, #4a76a8, #3a5f8a);
+    }
+
+    .quick-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .quick-btn {
+      padding: 0.8rem 1.5rem;
+      border: 1px solid #404040;
+      border-radius: 8px;
+      background: rgba(216, 167, 177, 0.1);
+      color: #d8a7b1;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .quick-btn:hover {
+      background: rgba(216, 167, 177, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 1rem 1.5rem;
+      background: linear-gradient(135deg, #a16076, #8e4c63);
+      color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      transform: translateX(150%);
+      transition: transform 0.3s ease;
+      z-index: 3000;
+    }
+
+    .notification.show {
+      transform: translateX(0);
+    }
+
+    .profile-section {
+      text-align: center;
+      margin: 2rem 0;
+      padding: 2rem;
+      background: linear-gradient(135deg, #3a3a3a 0%, #2d2d2d 100%);
+      border-radius: 16px;
+      border: 1px solid #404040;
+    }
+
+    .profile-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, #4a76a8, #3a5f8a);
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+    }
+
+    .profile-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(74, 118, 168, 0.4);
+      text-decoration: none;
+      color: white;
+    }
+
+    .phone-input {
+      font-family: 'Montserrat', sans-serif;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="container">
+      <div class="menu-toggle" id="menu-toggle">
+        <span></span><span></span><span></span>
+      </div>
+      <nav>
+        <ul class="nav-menu" id="nav-menu">
+          <li><a href="index.html">Главная</a></li>
+          <li><a href="about.html">Обо мне</a></li>
+          <li><a href="services.html">Услуги</a></li>
+          <li><a href="portfolio.html">Мои работы</a></li>
+          <li><a href="contact.html">Где записаться?</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="contact">
+      <h2>Где записаться?</h2>
+      <p>Вы можете связаться со мной удобным для вас способом:</p>
+
+      <!-- Быстрые действия -->
+      <div class="quick-actions">
+        <button class="quick-btn" onclick="copyPhoneNumber()">📋 Скопировать номер</button>
+        <button class="quick-btn" onclick="saveContact()">📱 Сохранить контакт</button>
+        <button class="quick-btn" onclick="showBookingModal()">📅 Записаться онлайн</button>
+      </div>
+
+      <!-- Ссылка на профиль VK -->
+      <div class="profile-section">
+        <h3>📱 Мой профиль ВКонтакте</h3>
+        <p>Подпишитесь на мой профиль, чтобы быть в курсе всех новостей и акций!</p>
+        <a href="https://vk.com/lash.aliona" target="_blank" class="profile-link">
+          <img src="images/vklogo.png" alt="VK" style="height: 24px;">
+          Перейти в мой профиль VK
+        </a>
+      </div>
+
+      <!-- Выбор услуги -->
+      <div class="service-selection">
+        <h3>🎯 Выберите услугу для записи:</h3>
+        <div class="service-grid">
+          <button class="service-btn" onclick="bookService('Ламинирование ресниц')">
+            💫 Ламинирование ресниц
+          </button>
+          <button class="service-btn" onclick="bookService('Наращивание ресниц')">
+            ✨ Наращивание ресниц
+          </button>
+        </div>
+      </div>
+
+      <div class="contact-info">
+        <h3>📞 Телефон:</h3>
+        <p>
+          <a href="tel:+79202128062" class="contact-link" id="phone-link">+7 (920) 212-80-62</a>
+          <button class="quick-btn" onclick="copyPhoneNumber()"
+            style="margin-left: 10px; padding: 0.3rem 0.8rem;">Копировать</button>
+        </p>
+
+        <h3>📍 Адрес:</h3>
+        <p>г. Воронеж, улица Маршала Одинцова, 25Б/5</p>
+
+        <h3>🖋 Онлайн-запись:</h3>
+
+        <!-- Разные способы связи -->
+        <div class="contact-methods">
+          <a href="https://vk.com/lash.aliona" target="_blank" class="contact-method vk-profile-link">
+            <img src="images/vklogo.png" alt="VK" style="height: 20px;">
+            Мой профиль VK
+          </a>
+
+          <a href="https://wa.me/79202128062?text=Здравствуйте! Хочу записаться на услугу. Пожалуйста, подскажите доступное время."
+            target="_blank" class="contact-method whatsapp-link">
+            📱 WhatsApp
+          </a>
+
+          <a href="https://t.me/+79202128062" target="_blank" class="contact-method telegram-link">
+            ✈️ Telegram
+          </a>
+        </div>
+      </div>
+
+      <!-- Модальное окно записи -->
+      <div class="booking-modal" id="bookingModal">
+        <div class="modal-content">
+          <button class="close-modal" onclick="closeBookingModal()">×</button>
+          <h3>📅 Онлайн запись</h3>
+
+          <form id="bookingForm">
+            <div class="form-group">
+              <label for="clientName">Ваше имя:</label>
+              <input type="text" id="clientName" required placeholder="Введите ваше имя">
+            </div>
+
+            <div class="form-group">
+              <label for="clientPhone">Ваш номер телефона:</label>
+              <input type="tel" id="clientPhone" required placeholder="+7 (___) ___-__-__"
+                pattern="\+7\s?[\(]{0,1}[0-9]{3}[\)]{0,1}\s?\d{3}[-]{0,1}\d{2}[-]{0,1}\d{2}" class="phone-input">
+              <small style="color: #b8b8b8; font-size: 0.8rem;">Формат: +7 (XXX) XXX-XX-XX</small>
+            </div>
+
+            <div class="form-group">
+              <label for="serviceType">Услуга:</label>
+              <select id="serviceType" required>
+                <option value="">Выберите услугу</option>
+                <option value="Ламинирование ресниц">Ламинирование ресниц</option>
+                <option value="Наращивание ресниц">Наращивание ресниц</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Предпочтительная дата:</label>
+              <input type="date" id="preferredDate" min="<?= date('Y-m-d') ?>">
+            </div>
+
+            <div class="form-group">
+              <label>Удобное время:</label>
+              <div class="time-slots">
+                <div class="time-slot" onclick="selectTimeSlot(this)">10:00</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">12:00</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">14:00</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">16:00</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">18:00</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">20:00</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="clientMessage">Дополнительная информация:</label>
+              <textarea id="clientMessage" placeholder="Особые пожелания или комментарии..."></textarea>
+            </div>
+
+            <button type="submit" class="service-btn" style="width: 100%; margin-top: 1rem;">
+              📨 Отправить заявку в VK
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="map-container">
+        <iframe
+          src="https://yandex.ru/map-widget/v1/?ll=39.269188%2C51.711470&mode=search&ol=geo&ouri=ymapsbm1%3A%2F%2Fgeo%3Fdata%3DCgo0NzI0Mzg0OTIzElDQoNC-0YHRgdC40Y8sINCS0L7RgNC-0L3QtdC2LCDRg9C70LjRhtCwINCc0LDRgNGI0LDQu9CwINCe0LTQuNC90YbQvtCy0LAsIDI10JEvNSIKDaUTHUIVjNhOQg%2C%2C&z=17.11"
+          width="100%" height="400" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </section>
+  </main>
+
+  <!-- Уведомление -->
+  <div class="notification" id="notification"></div>
+
+  <footer>
+    <p>&copy; 2025 ALYONA LASHES — Все права защищены</p>
+  </footer>
+
+  <script>
+    const toggle = document.getElementById('menu-toggle');
+    const menu = document.getElementById('nav-menu');
+    const bookingModal = document.getElementById('bookingModal');
+    const notification = document.getElementById('notification');
+
+    // Меню бургер
+    toggle.addEventListener('click', () => {
+      menu.classList.toggle('active');
+      toggle.classList.toggle('open');
+    });
+
+    // Функция для создания ссылки VK с номером телефона
+    function createVKLink(service = '', name = '', phone = '', date = '', time = '') {
+      let baseMessage = "НОВАЯ ЗАЯВКА С САЙТА:\n\n";
+
+      if (name) baseMessage += `👤 Имя: ${name}\n`;
+      if (phone) baseMessage += `📞 Телефон: ${phone}\n`;
+      if (service) baseMessage += `💫 Услуга: ${service}\n`;
+      if (date) baseMessage += `📅 Предпочтительная дата: ${date}\n`;
+      if (time) baseMessage += `⏰ Удобное время: ${time}\n`;
+
+      baseMessage += "\n✅ Пожалуйста, свяжитесь с клиентом для подтверждения записи.";
+
+      const encodedMessage = encodeURIComponent(baseMessage);
+      return `https://vk.com/im/convo/757351272?entrypoint=list_all&message=${encodedMessage}`;
+    }
+
+    // Запись на конкретную услугу
+    function bookService(service) {
+      showBookingModal();
+      // Автоматически выбираем услугу в форме
+      setTimeout(() => {
+        document.getElementById('serviceType').value = service;
+      }, 100);
+    }
+
+    // Модальное окно
+    function showBookingModal() {
+      bookingModal.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeBookingModal() {
+      bookingModal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+      resetForm();
+    }
+
+    // Выбор временного слота
+    function selectTimeSlot(element) {
+      document.querySelectorAll('.time-slot').forEach(slot => {
+        slot.classList.remove('selected');
+      });
+      element.classList.add('selected');
+    }
+
+    // Маска для телефона
+    function formatPhoneNumber(phone) {
+      // Убираем все нецифровые символы
+      const cleaned = phone.replace(/\D/g, '');
+
+      // Форматируем номер
+      if (cleaned.length === 11) {
+        return `+7 (${cleaned.substring(1, 4)}) ${cleaned.substring(4, 7)}-${cleaned.substring(7, 9)}-${cleaned.substring(9, 11)}`;
+      }
+      return phone;
+    }
+
+    // Обработка формы
+    document.getElementById('bookingForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById('clientName').value;
+      const phone = document.getElementById('clientPhone').value;
+      const service = document.getElementById('serviceType').value;
+      const date = document.getElementById('preferredDate').value;
+      const time = document.querySelector('.time-slot.selected')?.textContent || '';
+      const message = document.getElementById('clientMessage').value;
+
+      // Форматируем телефон
+      const formattedPhone = formatPhoneNumber(phone);
+
+      let vkMessage = "НОВАЯ ЗАЯВКА С САЙТА:\n\n";
+      vkMessage += `👤 Имя: ${name}\n`;
+      vkMessage += `📞 Телефон: ${formattedPhone}\n`;
+      vkMessage += `💫 Услуга: ${service}\n`;
+      if (date) vkMessage += `📅 Предпочтительная дата: ${formatDate(date)}\n`;
+      if (time) vkMessage += `⏰ Удобное время: ${time}\n`;
+      if (message) vkMessage += `💬 Комментарий: ${message}\n`;
+
+      vkMessage += "\n✅ Пожалуйста, свяжитесь с клиентом для подтверждения записи.";
+
+      const vkLink = `https://vk.com/im/convo/757351272?entrypoint=list_all&message=${encodeURIComponent(vkMessage)}`;
+
+      window.open(vkLink, '_blank');
+      showNotification('✅ Заявка отправлена! Открываю диалог в VK...');
+
+      // Очищаем форму после отправки
+      setTimeout(() => {
+        closeBookingModal();
+      }, 1000);
+    });
+
+    // Вспомогательные функции
+    function copyPhoneNumber() {
+      const phone = '+79202128062';
+      navigator.clipboard.writeText(phone).then(() => {
+        showNotification('✅ Номер телефона скопирован!');
+      });
+    }
+
+    function saveContact() {
+      const phone = '+79202128062';
+      const name = 'ALYONA LASHES';
+      const vCard = `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL:${phone}\nEND:VCARD`;
+
+      const blob = new Blob([vCard], { type: 'text/vcard' });
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'alyona_lashes.vcf';
+      link.click();
+
+      showNotification('✅ Контакт сохранен!');
+    }
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('ru-RU');
+    }
+
+    function showNotification(text) {
+      notification.textContent = text;
+      notification.classList.add('show');
+
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+
+    function resetForm() {
+      document.getElementById('bookingForm').reset();
+      document.querySelectorAll('.time-slot').forEach(slot => {
+        slot.classList.remove('selected');
+      });
+    }
+
+    // Закрытие модального окна при клике вне его
+    bookingModal.addEventListener('click', function (e) {
+      if (e.target === bookingModal) {
+        closeBookingModal();
+      }
+    });
+
+    // Установка минимальной даты
+    document.getElementById('preferredDate').min = new Date().toISOString().split('T')[0];
+
+    // Маска для телефона
+    document.getElementById('clientPhone').addEventListener('input', function (e) {
+      let value = e.target.value.replace(/\D/g, '');
+
+      if (value.startsWith('7') || value.startsWith('8')) {
+        value = value.substring(1);
+      }
+
+      if (value.length > 0) {
+        value = '+7 (' + value;
+      }
+      if (value.length > 7) {
+        value = value.substring(0, 7) + ') ' + value.substring(7);
+      }
+      if (value.length > 12) {
+        value = value.substring(0, 12) + '-' + value.substring(12);
+      }
+      if (value.length > 15) {
+        value = value.substring(0, 15) + '-' + value.substring(15);
+      }
+      if (value.length > 18) {
+        value = value.substring(0, 18);
+      }
+
+      e.target.value = value;
+    });
+  </script>
+
+</body>
+
+</html>
